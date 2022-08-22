@@ -8,6 +8,7 @@ const ogTitle = 'Vite'
 const ogUrl = 'https://vitejs.dev'
 
 export default defineConfig({
+  base: '/vite-docs-cn/',
   title: 'Vite 官方中文文档',
   description: '下一代前端工具链',
   lang: 'zh-CN',
