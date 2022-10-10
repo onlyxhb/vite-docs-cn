@@ -30,7 +30,7 @@ export function useSponsor() {
     const result = await fetch(dataUrl)
     const json = await result.json()
 
-    data.value = mapSponsors(json)
+    // data.value = mapSponsors(json)
   })
 
   return {
