@@ -63,7 +63,7 @@ export default defineConfig({
 
 也可以用一个工厂函数 `splitVendorChunk({ cache: SplitVendorChunkCache })` 来提供该策略，在需要与自定义逻辑组合的情况下，`cache.reset()` 需要在 `buildStart` 阶段被调用，以便构建的 watch 模式在这种情况下正常工作。
 
-## 文件变化时重新构建 {#rebuild-on-files-changs}
+## 文件变化时重新构建 {#rebuild-on-files-changes}
 
 你可以使用 `vite build --watch` 来启用 rollup 的监听器。或者，你可以直接通过 `build.watch` 调整底层的 [`WatcherOptions`](https://rollupjs.org/guide/en/#watch-options) 选项：
 
@@ -131,6 +131,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
     lib: {
+      // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, 'lib/main.js'),
       name: 'MyLib',
       // the proper extensions will be added
@@ -186,8 +187,30 @@ dist/my-lib.umd.cjs 0.30 KiB / gzip: 0.16 KiB
 }
 ```
 
+或者，如果暴露了多个入口起点：
+
+```json
+{
+  "name": "my-lib",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/my-lib.cjs",
+  "module": "./dist/my-lib.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/my-lib.mjs",
+      "require": "./dist/my-lib.cjs"
+    },
+    "./secondary": {
+      "import": "./dist/secondary.mjs",
+      "require": "./dist/secondary.cjs"
+    }
+  }
+}
+```
+
 ::: tip 注意
-如果 `package.json` 不包含 `"type": "module"`，Vite 会生成不同的文件后缀名以兼容 Node.js。`.js` 会变为 `.mjs` 而 `.cjs` 会变为 `.js`.
+如果 `package.json` 不包含 `"type": "module"`，Vite 会生成不同的文件后缀名以兼容 Node.js。`.js` 会变为 `.mjs` 而 `.cjs` 会变为 `.js` 。
 :::
 
 ::: tip 环境变量
